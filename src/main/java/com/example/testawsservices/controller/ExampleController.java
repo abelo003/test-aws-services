@@ -39,4 +39,14 @@ public class ExampleController {
         return "{\"result\": " + Arrays.stream(array).mapToObj(n->String.valueOf(n)).collect(Collectors.toList()) + "}";
     }
 
+    @GetMapping("/hello")
+    public String hello() {
+        return "123";
+    }
+
+    @GetMapping("/hello2")
+    public String hello2() {
+        return "123";
+    }
+
 }
