@@ -1,0 +1,4 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:secret@localhost:27017/admin?authSource=admin&directConnection=true&authenticationMechanisms=SCRAM-SHA-1

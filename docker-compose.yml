@@ -1,0 +1,49 @@
+version: '5'
+
+services:
+  mongodb:
+    container_name: mongo-dev
+    image: mongo:latest
+    env_file:
+      - .env
+    networks:
+      mongo-compose-network:
+      #ipv4_address: 172.16.0.3
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+      - ./init.js:/docker-entrypoint-initdb.d/init.js:ro
+
+  aws-service:
+    image: abelo003/test-aws-service
+    container_name: test-aws-service
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    networks:
+      mongo-compose-network:
+    environment:
+      - "SERVER_PORT=8080"
+      - "SPRING_PROFILES_ACTIVE=default"
+      - "SPRING_DATA_MONGODB_HOST=mongo-dev"
+      - "SPRING_DATA_MONGODB_PORT=27017"
+    restart: always
+    ports:
+      - 8080:8080
+
+networks:
+  mongo-compose-network:
+    driver: bridge
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.0.0/28
+volumes:
+  mongodb_data_container:
