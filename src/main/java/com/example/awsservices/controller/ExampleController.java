@@ -1,11 +1,14 @@
 package com.example.testawsservices.controller;
 
+import com.example.testawsservices.components.TestProps;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -13,6 +16,18 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/test")
 public class ExampleController {
+
+    private TestProps props;
+
+    public ExampleController(TestProps props) {
+        this.props = props;
+    }
+
+    @PostConstruct
+    private void init() {
+        log.info("Loading propertie first: " + props.getFirst());
+        log.info("Loading propertie second: " + props.getSecond());
+    }
 
     @GetMapping
     public String getTest() {
